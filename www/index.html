@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gold Calculator Pro - M!N L@b</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-primary: #f59e0b;
+            --gold-dark: #d97706;
+            --gold-light: #fcd34d;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+        }
+
+        * { 
+            font-family: 'Hind Siliguri', 'Inter', sans-serif; 
+            scrollbar-width: thin;
+            scrollbar-color: #f59e0b #f1f5f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f59e0b, #d97706); border-radius: 10px; }
+
+        html, body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Prevent zoom on inputs for mobile */
+        input, select, textarea { font-size: 16px; }
+
+        /* Animated Background Particles */
+        .particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: rgba(245, 158, 11, 0.3);
+            border-radius: 50%;
+            animation: float-particle 15s infinite ease-in-out;
+        }
+        @keyframes float-particle {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        /* Animated Gradient Header (premium multi-theme transition) */
+        .animated-header {
+            background: linear-gradient(-45deg, #f59e0b, #d97706, #b45309, #fbbf24, #f59e0b);
+            background-size: 500% 500%;
+            animation: header-gradient-shift 10s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        .animated-header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+            background-size: 22px 22px;
+            animation: shimmer 16s linear infinite;
+            opacity: .9;
+        }
+        .animated-header::after {
+            content: '';
+            position: absolute;
+            inset: -60%;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.16) 25%,
+                rgba(255,255,255,0.06) 50%,
+                rgba(255,255,255,0.16) 75%,
+                transparent 100%);
+            transform: rotate(12deg) translateX(-40%);
+            animation: header-sheen 7s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes header-gradient-shift {
+            0% {
+                background-image: linear-gradient(-45deg, #f59e0b, #d97706, #b45309, #fbbf24, #f59e0b);
+                background-position: 0% 50%;
+            }
+            25% {
+                background-image: linear-gradient(-45deg, #10b981, #059669, #047857, #34d399, #10b981);
+                background-position: 100% 50%;
+            }
+            50% {
+                background-image: linear-gradient(-45deg, #3b82f6, #1d4ed8, #1e40af, #60a5fa, #3b82f6);
+                background-position: 50% 0%;
+            }
+            75% {
+                background-image: linear-gradient(-45deg, #8b5cf6, #6d28d9, #4c1d95, #a78bfa, #8b5cf6);
+                background-position: 0% 50%;
+            }
+            100% {
+                background-image: linear-gradient(-45deg, #f59e0b, #d97706, #b45309, #fbbf24, #f59e0b);
+                background-position: 0% 50%;
+            }
+        }
+        @keyframes header-sheen {
+            0% { transform: rotate(12deg) translateX(-40%); opacity: .35; }
+            50% { transform: rotate(12deg) translateX(20%); opacity: .55; }
+            100% { transform: rotate(12deg) translateX(60%); opacity: .35; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        /* 3D Input Fields */
+        .input-3d {
+            background: linear-gradient(145deg, #ffffff, #f3f4f6);
+            box-shadow: 5px 5px 10px #d1d5db, -5px -5px 10px #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        .input-3d:focus {
+            box-shadow: inset 5px 5px 10px #d1d5db, inset -5px -5px 10px #ffffff;
+            border-color: #f59e0b;
+            transform: translateY(-2px);
+        }
+        .input-3d:hover {
+            transform: translateY(-1px);
+            box-shadow: 8px 8px 16px #d1d5db, -8px -8px 16px #ffffff;
+        }
+
+        /* Neumorphic Buttons */
+        .btn-neu {
+            background: linear-gradient(145deg, #ffffff, #f3f4f6);
+            box-shadow: 5px 5px 10px #d1d5db, -5px -5px 10px #ffffff;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-neu:hover {
+            box-shadow: 8px 8px 16px #d1d5db, -8px -8px 16px #ffffff;
+            transform: translateY(-2px);
+        }
+        .btn-neu:active {
+            box-shadow: inset 5px 5px 10px #d1d5db, inset -5px -5px 10px #ffffff;
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            box-shadow: 5px 5px 15px rgba(245, 158, 11, 0.4), -5px -5px 15px rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+        }
+        .btn-gold:hover {
+            box-shadow: 8px 8px 20px rgba(245, 158, 11, 0.5), -8px -8px 20px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px) scale(1.02);
+        }
+        .btn-gold:active {
+            box-shadow: inset 5px 5px 10px rgba(180, 83, 9, 0.5), inset -5px -5px 10px rgba(251, 191, 36, 0.3);
+        }
+
+        /* Result Card with Glow */
+        .result-glow {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.3), 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-glow::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* Floating Animation */
+        .float-slow {
+            animation: float-slow 6s ease-in-out infinite;
+        }
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Pulse Ring */
+        .pulse-ring {
+            position: relative;
+        }
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            border: 2px solid #f59e0b;
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px; height: 26px;
+            background: #e2e8f0;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-switch.active {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 20px; height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* History Item */
+        .history-item {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .history-item:hover {
+            transform: translateX(5px);
+            border-color: #f59e0b;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Carat Badge */
+        .carat-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Custom Select */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f59e0b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        /* Number input hide arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; margin: 0; 
+        }
+
+        /* Print Styles */
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; }
+            .glass-card { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --glass-bg: rgba(30, 41, 59, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ── M!N L@b Brand Footer (with animations) ── */
+        @keyframes minColor {
+            0%     { color: #FF4500 }
+            13.33% { color: #9D4EDD }
+            20%    { color: #9D4EDD }
+            33.33% { color: #E91E63 }
+            40%    { color: #E91E63 }
+            53.33% { color: #FF8C00 }
+            60%    { color: #FF8C00 }
+            73.33% { color: #00C853 }
+            80%    { color: #00C853 }
+            93.33% { color: #FF4500 }
+            100%   { color: #FF4500 }
+        }
+        @keyframes labsColor {
+            0%     { color: #00BAFF }
+            13.33% { color: #4CAF50 }
+            20%    { color: #4CAF50 }
+            33.33% { color: #00BCD4 }
+            40%    { color: #00BCD4 }
+            53.33% { color: #2196F3 }
+            60%    { color: #2196F3 }
+            73.33% { color: #FF1744 }
+            80%    { color: #FF1744 }
+            93.33% { color: #00BAFF }
+            100%   { color: #00BAFF }
+        }
+        @keyframes bfShimmer {
+            0%   { transform: translateX(-100%) }
+            100% { transform: translateX(400%) }
+        }
+
+        .brand-footer.gf-anim{
+            display:flex;
+            flex-shrink:0;
+            height:26px;
+            background:#06080F;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            z-index:150;
+            border-top:1px solid rgba(255,255,255,.07);
+            overflow:hidden;
+            border-radius:0 0 24px 24px;
+        }
+        .brand-footer.gf-anim::before{
+            content:'';
+            position:absolute;
+            top:0;bottom:0;
+            width:40px;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,.09) 50%, transparent);
+            animation: bfShimmer 4s ease-in-out infinite;
+            pointer-events:none;
+        }
+        .bf-powered{
+            font-size:10px;
+            color:#898c8c;
+            font-family:'Inter', 'Lexend', sans-serif;
+            font-weight:400;
+            letter-spacing:.4px;
+            margin-right:6px;
+            position:relative;
+            z-index:2;
+            white-space:nowrap;
+        }
+        .bf-min{
+            font-family:'Inter', 'Lexend', sans-serif;
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.6px;
+            position:relative;
+            z-index:2;
+            color:#FF4500;
+            animation:minColor 30s linear infinite;
+            white-space:nowrap;
+        }
+        .bf-sep{
+            font-size:9px;
+            color:rgba(255,255,255,.15);
+            margin:0 2px;
+            font-weight:300;
+            position:relative;
+            z-index:2;
+            white-space:nowrap;
+        }
+        .bf-labs{
+            font-family:'Inter', 'Lexend', sans-serif;
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.6px;
+            position:relative;
+            z-index:2;
+            color:#00BAFF;
+            animation: labsColor 30s linear infinite;
+            white-space:nowrap;
+        }
+
+        body.dark-mode .glass-card {
+            background: var(--glass-bg);
+            border-color: var(--glass-border);
+            color: #e2e8f0;
+        }
+        body.dark-mode .input-3d {
+            background: linear-gradient(145deg, #334155, #1e293b);
+            box-shadow: 5px 5px 10px #0f172a, -5px -5px 10px #475569;
+            color: white;
+        }
+        body.dark-mode .input-3d:focus {
+            box-shadow: inset 5px 5px 10px #0f172a, inset -5px -5px 10px #475569;
+        }
+
+        /* ===== RESPONSIVE FIXES ===== */
+
+        /* Mobile (up to 639px) */
+        @media (max-width: 639px) {
+            .main-container {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+                padding: 8px !important;
+            }
+            .glass-card {
+                border-radius: 20px !important;
+            }
+            .animated-header {
+                padding: 20px 16px !important;
+            }
+            .animated-header h1 {
+                font-size: 1.5rem !important;
+            }
+            .input-3d {
+                padding: 12px 16px !important;
+                font-size: 1.1rem !important;
+            }
+            .result-glow {
+                padding: 24px 16px !important;
+            }
+            .result-glow .text-5xl {
+                font-size: 2rem !important;
+            }
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .action-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+            .action-grid button {
+                padding: 10px 4px !important;
+                font-size: 0.7rem !important;
+            }
+            /* Fix currency symbol overlapping on mobile */
+            #currencySymbol { left: 14px !important; font-size: 1.2rem !important; }
+            #vhoriPrice { padding-left: 3.25rem !important; padding-right: 0.75rem !important; }
+            #vhoriPrice + #currencySymbol { left: 14px !important; }
+            .input-3d[placeholder] { }
+
+            .settings-bar {
+                flex-direction: column !important;
+                gap: 8px !important;
+            }
+            .settings-bar > div {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+            .quick-add-btns {
+                flex-wrap: wrap !important;
+            }
+            .quick-add-btns button {
+                flex: 1 1 calc(50% - 4px) !important;
+                min-width: 0 !important;
+            }
+            .history-item {
+                padding: 10px !important;
+            }
+            .toast {
+                width: 90% !important;
+                max-width: 350px !important;
+                padding: 12px 16px !important;
+            }
+            /* sidebar-section removed in single-column layout */
+            .calc-section {
+                order: 1;
+            }
+
+        }
+
+        /* Tablet (640px - 1023px) */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .main-container {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+            }
+        }
+
+        /* Small Mobile (up to 374px) */
+        @media (max-width: 374px) {
+            .animated-header h1 {
+                font-size: 1.2rem !important;
+            }
+            .result-glow .text-5xl {
+                font-size: 1.5rem !important;
+            }
+            .grid-cols-4 {
+                gap: 6px !important;
+            }
+            .grid-cols-4 input {
+                padding: 8px 4px !important;
+                font-size: 0.9rem !important;
+            }
+            .action-grid button {
+                font-size: 0.65rem !important;
+                padding: 8px 2px !important;
+            }
+            .action-grid button i {
+                display: none !important;
+            }
+        }
+
+        /* Large screens (1024px+) */
+        @media (min-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Very large screens (1440px+) */
+        @media (min-width: 1440px) {
+            .main-container {
+                grid-template-columns: 1fr !important;
+                max-width: 1200px !important;
+            }
+        }
+
+
+        /* Landscape mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-container {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .animated-header {
+                padding: 12px !important;
+            }
+            .animated-header h1 {
+                font-size: 1.3rem !important;
+            }
+        }
+
+        /* Safe area for notched phones */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen p-4 relative">
+    <!-- Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle text-amber-400 text-xl"></i>
+        <span id="toastMessage">অপারেশন সফল!</span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-6xl relative z-10" style="display:block;">
+
+        <!-- Content wrapper with auto-fit (mobile friendly) -->
+        <div class="max-w-full"> 
+
+
+        <!-- Single Column (No sidebar) -->
+        <div class="space-y-6">
+            <!-- Main Calculator Card -->
+            <div class="glass-card rounded-[32px] overflow-hidden float-slow">
+
+                <!-- Animated Header -->
+                <div class="animated-header p-8 text-white text-center relative">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-center gap-3 mb-2">
+                            <i class="fas fa-gem text-3xl opacity-90"></i>
+                            <h1 class="text-3xl font-black tracking-tight">Gold Calculator Pro</h1>
+                        </div>
+                        <p class="text-sm opacity-90 font-medium">স্বর্ণের দাম হিসাব করুন সহজেই</p>
+                        <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
+                            <span class="carat-badge" id="currentCaratBadge">২২ ক্যারেট</span>
+                            <span class="carat-badge" style="background: linear-gradient(135deg, #10b981, #059669);" id="currentCurrencyBadge">BDT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <!-- Settings Bar -->
+                    <div class="settings-bar flex flex-wrap items-center justify-between gap-3 bg-amber-50 rounded-2xl p-4 border border-amber-100">
+                        <div class="flex items-center gap-3">
+                            <label class="text-xs font-bold text-amber-800 whitespace-nowrap">ক্যারেট:</label>
+                            <select id="caratSelect" onchange="updateCarat()" class="custom-select bg-white border-2 border-amber-200 rounded-xl px-3 py-2 text-sm font-bold text-amber-700 outline-none focus:border-amber-500 cursor-pointer min-w-[140px]">
+                                <option value="24">২৪ ক্যারেট</option>
+                                <option value="22" selected>২২ ক্যারেট</option>
+                                <option value="21">২১ ক্যারেট</option>
+                                <option value="18">১৮ ক্যারেট</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <label class="text-xs font-bold text-amber-800 whitespace-nowrap">মুদ্রা:</label>
+                            <select id="currencySelect" onchange="updateCurrency()" class="custom-select bg-white border-2 border-amber-200 rounded-xl px-3 py-2 text-sm font-bold text-amber-700 outline-none focus:border-amber-500 cursor-pointer min-w-[100px]">
+                                <option value="BDT" selected>৳ BDT</option>
+                                <option value="USD">$ USD</option>
+                                <option value="INR">₹ INR</option>
+                                <option value="GBP">£ GBP</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2 no-print">
+                            <span class="text-xs font-bold text-gray-500">ডার্ক</span>
+                            <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+                        </div>
+                    </div>
+
+                    <!-- Market Price Input -->
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-amber-800 mb-2 ml-1 flex items-center gap-2">
+                            <i class="fas fa-tag text-amber-500"></i>
+                            প্রতি ভরির বর্তমান বাজার মূল্য:
+                        </label>
+                        <div class="relative">
+                            <input type="number" id="vhoriPrice"
+                                oninput="" 
+                                class="input-3d w-full p-5 rounded-2xl text-2xl font-black text-amber-700 outline-none pl-14 pr-14"
+                                placeholder="০.০০">
+                            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-amber-500 text-2xl font-bold pointer-events-none" id="currencySymbol">৳</span>
+                            <button onclick="savePrice()" class="absolute right-3 top-1/2 -translate-y-1/2 btn-neu p-2 rounded-xl text-amber-600 hover:text-amber-800 tooltip" data-tip="দাম সেভ করুন">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </div>
+
+                        <p class="text-xs text-gray-400 mt-1 ml-1" id="priceHint">২২ ক্যারেট স্বর্ণের প্রতি ভরি দাম</p>
+                    </div>
+
+                    <!-- Weight Inputs Grid -->
+                    <div class="grid grid-cols-4 gap-3">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-gray-500 ml-1">ভরি</label>
+                            <input type="number" id="vhori"
+                                oninput="syncUnits('vhori')"
+                                class="input-3d w-full p-4 rounded-xl text-center font-bold text-lg outline-none"
+                                placeholder="০" value="0">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-gray-500 ml-1">আনা</label>
+                            <input type="number" id="ana"
+                                oninput="syncUnits('ana')"
+                                class="input-3d w-full p-4 rounded-xl text-center font-bold text-lg outline-none"
+                                placeholder="০" value="0">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-gray-500 ml-1">রতি</label>
+                            <input type="number" id="roti"
+                                oninput="syncUnits('roti')"
+                                class="input-3d w-full p-4 rounded-xl text-center font-bold text-lg outline-none"
+                                placeholder="০" value="0">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-amber-600 ml-1">পয়েন্ট</label>
+                            <input type="number" id="point"
+                                oninput="syncUnits('point')"
+                                class="input-3d w-full p-4 rounded-xl text-center font-bold text-lg outline-none border-amber-200"
+                                placeholder="০" value="0">
+                        </div>
+                    </div>
+
+                        <!-- Calculate Button -->
+                        <div class="no-print">
+                            <button onclick="calculatePrice(); document.getElementById('resultsSection').classList.remove('hidden');" class="w-full mt-3 py-4 rounded-2xl text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100 text-amber-700 border-2 border-amber-200 hover:from-amber-100 hover:to-amber-200 hover:border-amber-300 transition-all hover:shadow-lg hover:shadow-amber-200/50 active:scale-95">
+                                <i class="fas fa-calculator"></i>
+                                হিসাব করুন
+                            </button>
+                        </div>
+
+                    <!-- Calculate / Result Section (initially hidden) -->
+                    <div id="resultsSection" class="hidden space-y-6">
+                        <div class="result-glow p-8 rounded-[28px] text-center relative">
+                            <span class="text-xs font-bold text-amber-700 uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+                                <i class="fas fa-coins"></i> সর্বমোট মূল্য
+                            </span>
+                            <div class="text-5xl font-black text-amber-600 my-3 tracking-tight relative z-10">
+                                <span id="totalPrice">০</span>
+                                <span class="text-2xl ml-1" id="resultCurrency">৳</span>
+                            </div>
+                            <div class="flex items-center justify-center gap-2 mt-2 relative z-10 flex-wrap">
+                                <span id="breakdown" class="text-xs text-gray-600 font-semibold bg-white/80 py-2 px-4 rounded-full shadow-sm">
+                                    ১ ভরি, ০ আনা, ০ রতি, ০ পয়েন্ট
+                                </span>
+                            </div>
+                            <div class="mt-3 text-xs text-amber-700 font-medium relative z-10" id="caratInfo">
+                                ২২ ক্যারেট স্বর্ণের মূল্য
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="glass-card rounded-[24px] p-6 stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="bg-gradient-to-br from-amber-50 to-yellow-50 p-4 rounded-2xl border border-amber-100 text-center">
+                                <i class="fas fa-weight-hanging text-amber-500 text-xl mb-1"></i>
+                                <p class="text-xs text-gray-500 font-bold">মোট ওজন</p>
+                                <p class="text-lg font-black text-amber-700" id="totalWeight">১.০০০</p>
+                                <p class="text-[10px] text-gray-400">ভরি</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-emerald-50 to-green-50 p-4 rounded-2xl border border-emerald-100 text-center">
+                                <i class="fas fa-balance-scale text-emerald-500 text-xl mb-1"></i>
+                                <p class="text-xs text-gray-500 font-bold">গ্রামে</p>
+                                <p class="text-lg font-black text-emerald-700" id="totalGram">১১.৬৬৪</p>
+                                <p class="text-[10px] text-gray-400">গ্রাম</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-4 rounded-2xl border border-blue-100 text-center">
+                                <i class="fas fa-percentage text-blue-500 text-xl mb-1"></i>
+                                <p class="text-xs text-gray-500 font-bold">বিশুদ্ধতা</p>
+                                <p class="text-lg font-black text-blue-700" id="purityPercent">৯১.৬%</p>
+                                <p class="text-[10px] text-gray-400">স্বর্ণ</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-2xl border border-purple-100 text-center">
+                                <i class="fas fa-calculator text-purple-500 text-xl mb-1"></i>
+                                <p class="text-xs text-gray-500 font-bold">পয়েন্ট</p>
+                                <p class="text-lg font-black text-purple-700" id="totalPoints">৯৬০</p>
+                                <p class="text-[10px] text-gray-400">পয়েন্ট</p>
+                            </div>
+                        </div>
+
+                        <!-- History -->
+                        <div class="glass-card rounded-[24px] p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fas fa-history text-amber-500"></i> হিসাবের ইতিহাস
+                                </h3>
+                                <span class="text-[10px] text-gray-400 font-bold" id="historyCount">০ টি</span>
+                            </div>
+                            <div class="space-y-2 max-h-80 overflow-y-auto pr-1" id="historyList">
+                                <div class="text-center text-gray-400 text-xs py-8">
+                                    <i class="fas fa-inbox text-2xl mb-2 opacity-50"></i>
+                                    <p>কোনো হিসাব নেই</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 no-print">
+                                <button onclick="clearHistory()" class="w-full py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-red-50 to-red-100 text-red-500 border-2 border-red-200 hover:from-red-100 hover:to-red-200 hover:border-red-300 transition-all hover:shadow-lg hover:shadow-red-200/50 active:scale-95">
+                                    <i class="fas fa-trash-alt mr-2"></i> ইতিহাস মুছে ফেলুন
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+
+                        <div class="action-grid grid grid-cols-3 gap-3 no-print">
+                            <button onclick="copyResult()" class="btn-gold py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                                <i class="fas fa-copy"></i> <span class="hidden sm:inline">কপি</span>
+                            </button>
+                            <button onclick="shareResult()" class="btn-gold py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                                <i class="fas fa-share-alt"></i> <span class="hidden sm:inline">শেয়ার</span>
+                            </button>
+                            <button onclick="printResult()" class="btn-gold py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                                <i class="fas fa-print"></i> <span class="hidden sm:inline">প্রিন্ট</span>
+                            </button>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <button onclick="resetAll()" class="w-full py-4 rounded-2xl text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-red-100 text-red-500 border-2 border-red-200 hover:from-red-100 hover:to-red-200 hover:border-red-300 transition-all hover:shadow-lg hover:shadow-red-200/50 active:scale-95">
+                            <i class="fas fa-redo-alt"></i> সব রিসেট করুন
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Brand Footer -->
+                <div class="brand-footer gf-anim">
+                    <span class="bf-powered">Powered by</span>
+                    <span class="bf-min">M!N</span>
+                    <span class="bf-sep">&nbsp;</span>
+                    <span class="bf-labs">L@b</span>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+
+    <script>
+
+        // Global State
+        let currentCarat = 22;
+        let currentCurrency = 'BDT';
+        let priceHistory = JSON.parse(localStorage.getItem('goldPriceHistory') || '[]');
+        let calculationHistory = JSON.parse(localStorage.getItem('goldCalcHistory') || '[]');
+        let chart = null;
+
+        const caratInfo = {
+            24: { name: '২৪ ক্যারেট', bnName: '৯৯.৯%', purity: 0.999 },
+            22: { name: '২২ ক্যারেট', bnName: '৯১.৬%', purity: 0.916 },
+            21: { name: '২১ ক্যারেট', bnName: '৮৭.৫%', purity: 0.875 },
+            18: { name: '১৮ ক্যারেট', bnName: '৭৫%', purity: 0.750 }
+        };
+
+        const currencySymbols = { BDT: '৳', USD: '$', INR: '₹', GBP: '£' };
+        const currencyRates = { BDT: 1, USD: 0.0091, INR: 0.76, GBP: 0.0072 };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initChart();
+            loadSavedData();
+            calculatePrice();
+            updateHistoryUI();
+        });
+
+        // Create Background Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                particle.style.width = particle.style.height = (2 + Math.random() * 4) + 'px';
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: priceHistory.map(h => new Date(h.date).toLocaleDateString('bn-BD', { month: 'short', day: 'numeric' })),
+                    datasets: [{
+                        label: 'স্বর্ণের দাম',
+                        data: priceHistory.map(h => h.price),
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#f59e0b',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: {
+                                callback: function(value) {
+                                    return '৳' + value.toLocaleString('bn-BD');
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load Saved Data
+        function loadSavedData() {
+            const savedPrice = localStorage.getItem('goldLastPrice');
+            if (savedPrice) {
+                document.getElementById('vhoriPrice').value = savedPrice;
+            }
+
+            const savedCarat = localStorage.getItem('goldCarat');
+            if (savedCarat) {
+                document.getElementById('caratSelect').value = savedCarat;
+                currentCarat = parseInt(savedCarat);
+            }
+
+            const savedCurrency = localStorage.getItem('goldCurrency');
+            if (savedCurrency) {
+                document.getElementById('currencySelect').value = savedCurrency;
+                currentCurrency = savedCurrency;
+                document.getElementById('currencySymbol').textContent = currencySymbols[currentCurrency];
+                document.getElementById('resultCurrency').textContent = currencySymbols[currentCurrency];
+            }
+
+            updateCaratBadge();
+            updatePriceHint();
+        }
+
+        // Main Calculation - FIXED: No carat percentage adjustment
+function calculatePrice() {
+            // Show results section after calculation
+            const resultsSection = document.getElementById('resultsSection');
+            if (resultsSection) resultsSection.classList.remove('hidden');
+
+            const vhoriPrice = parseFloat(document.getElementById('vhoriPrice').value) || 0;
+            const vhori = parseFloat(document.getElementById('vhori').value) || 0;
+            const ana = parseFloat(document.getElementById('ana').value) || 0;
+            const roti = parseFloat(document.getElementById('roti').value) || 0;
+            const point = parseFloat(document.getElementById('point').value) || 0;
+
+            // Calculate total points (1 vhori = 960 points)
+            const totalPoints = (vhori * 960) + (ana * 60) + (roti * 10) + point;
+            const pricePerPoint = vhoriPrice / 960;
+
+            // FIXED: Direct calculation - no carat purity adjustment
+            // The price entered is already for the selected carat
+            const totalFinalPrice = totalPoints * pricePerPoint;
+
+            // Convert to selected currency
+            const convertedPrice = totalFinalPrice * currencyRates[currentCurrency];
+
+            // Update main result
+            document.getElementById('totalPrice').innerText = Math.round(convertedPrice).toLocaleString('bn-BD');
+
+            // Update breakdown
+            const breakdownEl = document.getElementById('breakdown');
+            if (vhoriPrice > 0) {
+                breakdownEl.innerText = `${vhori} ভরি, ${ana} আনা, ${roti} রতি, ${point} পয়েন্ট`;
+                breakdownEl.classList.add('text-amber-700');
+            } else {
+                breakdownEl.innerText = "বাজার দর লিখুন";
+                breakdownEl.classList.remove('text-amber-700');
+            }
+
+            // Update stats
+            const totalVhori = totalPoints / 960;
+            document.getElementById('totalWeight').textContent = totalVhori.toFixed(3);
+            document.getElementById('totalGram').textContent = (totalVhori * 11.664).toFixed(3);
+            document.getElementById('purityPercent').textContent = caratInfo[currentCarat].bnName;
+            document.getElementById('totalPoints').textContent = totalPoints.toLocaleString('bn-BD');
+
+            // Update conversion inputs
+            document.getElementById('convVhori').value = totalVhori.toFixed(3);
+            document.getElementById('convAna').value = (totalVhori * 16).toFixed(2);
+            document.getElementById('convRoti').value = (totalVhori * 96).toFixed(1);
+            document.getElementById('convPoint').value = totalPoints;
+            document.getElementById('convGram').value = (totalVhori * 11.664).toFixed(3);
+
+            // Update carat info text
+            document.getElementById('caratInfo').textContent = 
+                `${caratInfo[currentCarat].name} স্বর্ণের মূল্য`;
+        }
+
+        // Sync Units (Real-time conversion)
+        function syncUnits(source) {
+            const vhori = parseFloat(document.getElementById('vhori').value) || 0;
+            const ana = parseFloat(document.getElementById('ana').value) || 0;
+            const roti = parseFloat(document.getElementById('roti').value) || 0;
+            const point = parseFloat(document.getElementById('point').value) || 0;
+
+            let totalPoints = (vhori * 960) + (ana * 60) + (roti * 10) + point;
+
+            if (source === 'vhori') {
+                // Keep ana, roti, point as is, only update vhori
+            } else if (source === 'ana') {
+                const extraVhori = Math.floor(ana / 16);
+                if (extraVhori > 0) {
+                    document.getElementById('vhori').value = vhori + extraVhori;
+                    document.getElementById('ana').value = ana % 16;
+                }
+            } else if (source === 'roti') {
+                const extraAna = Math.floor(roti / 6);
+                if (extraAna > 0) {
+                    const newAna = ana + extraAna;
+                    const extraVhori = Math.floor(newAna / 16);
+                    document.getElementById('vhori').value = vhori + extraVhori;
+                    document.getElementById('ana').value = newAna % 16;
+                    document.getElementById('roti').value = roti % 6;
+                }
+            } else if (source === 'point') {
+                const extraRoti = Math.floor(point / 10);
+                if (extraRoti > 0) {
+                    const newRoti = roti + extraRoti;
+                    const extraAna = Math.floor(newRoti / 6);
+                    const newAna = ana + extraAna;
+                    const extraVhori = Math.floor(newAna / 16);
+                    document.getElementById('vhori').value = vhori + extraVhori;
+                    document.getElementById('ana').value = newAna % 16;
+                    document.getElementById('roti').value = newRoti % 6;
+                    document.getElementById('point').value = point % 10;
+                }
+            }
+
+            calculatePrice();
+        }
+
+        // Quick Add
+        function quickAdd(v, a, r, p) {
+            document.getElementById('vhori').value = (parseFloat(document.getElementById('vhori').value) || 0) + v;
+            document.getElementById('ana').value = (parseFloat(document.getElementById('ana').value) || 0) + a;
+            document.getElementById('roti').value = (parseFloat(document.getElementById('roti').value) || 0) + r;
+            document.getElementById('point').value = (parseFloat(document.getElementById('point').value) || 0) + p;
+            syncUnits('point');
+            showToast('যোগ করা হয়েছে!');
+        }
+
+        // Conversion from sidebar
+        function convertFrom(unit) {
+            let vhori = 0;
+
+            if (unit === 'vhori') {
+                vhori = parseFloat(document.getElementById('convVhori').value) || 0;
+            } else if (unit === 'ana') {
+                vhori = (parseFloat(document.getElementById('convAna').value) || 0) / 16;
+            } else if (unit === 'roti') {
+                vhori = (parseFloat(document.getElementById('convRoti').value) || 0) / 96;
+            } else if (unit === 'point') {
+                vhori = (parseFloat(document.getElementById('convPoint').value) || 0) / 960;
+            } else if (unit === 'gram') {
+                vhori = (parseFloat(document.getElementById('convGram').value) || 0) / 11.664;
+            }
+
+            const totalPoints = vhori * 960;
+            document.getElementById('vhori').value = Math.floor(totalPoints / 960);
+            document.getElementById('ana').value = Math.floor((totalPoints % 960) / 60);
+            document.getElementById('roti').value = Math.floor((totalPoints % 60) / 10);
+            document.getElementById('point').value = Math.floor(totalPoints % 10);
+
+            calculatePrice();
+        }
+
+        // Update Carat
+        function updateCarat() {
+            currentCarat = parseInt(document.getElementById('caratSelect').value);
+            localStorage.setItem('goldCarat', currentCarat);
+            updateCaratBadge();
+            updatePriceHint();
+            showToast(`${caratInfo[currentCarat].name} সিলেক্ট করা হয়েছে`);
+        }
+
+        function updatePriceHint() {
+            document.getElementById('priceHint').textContent = 
+                `${caratInfo[currentCarat].name} স্বর্ণের প্রতি ভরি দাম`;
+        }
+
+        // Update Currency
+        function updateCurrency() {
+            currentCurrency = document.getElementById('currencySelect').value;
+            localStorage.setItem('goldCurrency', currentCurrency);
+            document.getElementById('currencySymbol').textContent = currencySymbols[currentCurrency];
+            document.getElementById('resultCurrency').textContent = currencySymbols[currentCurrency];
+            document.getElementById('currentCurrencyBadge').textContent = currentCurrency;
+            showToast(`${currentCurrency} মুদ্রা সিলেক্ট করা হয়েছে`);
+        }
+
+        function updateCaratBadge() {
+            document.getElementById('currentCaratBadge').textContent = caratInfo[currentCarat].name;
+        }
+
+        // Save Price to History
+        function savePrice() {
+            const price = parseFloat(document.getElementById('vhoriPrice').value);
+            if (!price || price <= 0) {
+                showToast('দাম লিখুন!', 'error');
+                return;
+            }
+
+            localStorage.setItem('goldLastPrice', price);
+
+            const entry = {
+                date: new Date().toISOString(),
+                price: price,
+                carat: currentCarat
+            };
+
+            priceHistory.push(entry);
+            if (priceHistory.length > 30) priceHistory.shift();
+            localStorage.setItem('goldPriceHistory', JSON.stringify(priceHistory));
+
+            // Update chart
+            chart.data.labels = priceHistory.map(h => new Date(h.date).toLocaleDateString('bn-BD', { month: 'short', day: 'numeric' }));
+            chart.data.datasets[0].data = priceHistory.map(h => h.price);
+            chart.update();
+
+            showToast('দাম সেভ এবং চার্টে যোগ করা হয়েছে!');
+        }
+
+        // Save Calculation
+        function saveCalculation() {
+            const vhoriPrice = parseFloat(document.getElementById('vhoriPrice').value) || 0;
+            const vhori = parseFloat(document.getElementById('vhori').value) || 0;
+            const ana = parseFloat(document.getElementById('ana').value) || 0;
+            const roti = parseFloat(document.getElementById('roti').value) || 0;
+            const point = parseFloat(document.getElementById('point').value) || 0;
+            const total = document.getElementById('totalPrice').innerText;
+
+            const entry = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                vhoriPrice,
+                weight: { vhori, ana, roti, point },
+                total,
+                carat: currentCarat,
+                currency: currentCurrency
+            };
+
+            calculationHistory.unshift(entry);
+            if (calculationHistory.length > 50) calculationHistory.pop();
+            localStorage.setItem('goldCalcHistory', JSON.stringify(calculationHistory));
+            updateHistoryUI();
+        }
+
+        // Update History UI
+        function updateHistoryUI() {
+            const list = document.getElementById('historyList');
+            document.getElementById('historyCount').textContent = `${calculationHistory.length} টি`;
+
+            if (calculationHistory.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center text-gray-400 text-xs py-8">
+                        <i class="fas fa-inbox text-2xl mb-2 opacity-50"></i>
+                        <p>কোনো হিসাব নেই</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = calculationHistory.map(item => `
+                <div class="history-item p-3 rounded-xl" onclick="loadHistory(${item.id})">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-gray-700">${item.weight.vhori}ভ ${item.weight.ana}আ ${item.weight.roti}র ${item.weight.point}প</p>
+                            <p class="text-[10px] text-gray-400">${new Date(item.date).toLocaleDateString('bn-BD')}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black text-amber-600">${currencySymbols[item.currency]}${item.total}</p>
+                            <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">${caratInfo[item.carat].name}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load from History
+        function loadHistory(id) {
+            const item = calculationHistory.find(h => h.id === id);
+            if (!item) return;
+
+            document.getElementById('vhoriPrice').value = item.vhoriPrice;
+            document.getElementById('vhori').value = item.weight.vhori;
+            document.getElementById('ana').value = item.weight.ana;
+            document.getElementById('roti').value = item.weight.roti;
+            document.getElementById('point').value = item.weight.point;
+            document.getElementById('caratSelect').value = item.carat;
+            currentCarat = item.carat;
+            updateCaratBadge();
+            updatePriceHint();
+            calculatePrice();
+            showToast('হিসাব লোড করা হয়েছে!');
+        }
+
+        // Clear History
+        function clearHistory() {
+            if (confirm('সব ইতিহাস মুছে ফেলতে চান?')) {
+                calculationHistory = [];
+                localStorage.removeItem('goldCalcHistory');
+                updateHistoryUI();
+                showToast('ইতিহাস মুছে ফেলা হয়েছে!');
+            }
+        }
+
+        // Copy Result
+        function copyResult() {
+            const text = `স্বর্ণের মূল্য: ${document.getElementById('totalPrice').innerText}${currencySymbols[currentCurrency]}\n` +
+                        `ওজন: ${document.getElementById('breakdown').innerText}\n` +
+                        `ক্যারেট: ${caratInfo[currentCarat].name}\n` +
+                        `Gold Calculator Pro by M!N L@b`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('কপি করা হয়েছে!');
+            });
+        }
+
+        // Share Result
+        function shareResult() {
+            const text = `স্বর্ণের মূল্য: ${document.getElementById('totalPrice').innerText}${currencySymbols[currentCurrency]}\n` +
+                        `ওজন: ${document.getElementById('breakdown').innerText}\n` +
+                        `ক্যারেট: ${caratInfo[currentCarat].name}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Gold Calculator Pro',
+                    text: text
+                });
+            } else {
+                copyResult();
+            }
+        }
+
+        // Print Result
+        function printResult() {
+            saveCalculation();
+            window.print();
+        }
+
+        // Reset All
+        function resetAll() {
+            document.getElementById('vhoriPrice').value = "";
+            document.getElementById('vhori').value = "0";
+            document.getElementById('ana').value = "0";
+            document.getElementById('roti').value = "0";
+            document.getElementById('point').value = "0";
+            calculatePrice();
+            showToast('রিসেট করা হয়েছে!');
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+
+            toastMessage.textContent = message;
+
+            if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle text-red-400 text-xl';
+            } else {
+                icon.className = 'fas fa-check-circle text-amber-400 text-xl';
+            }
+
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('darkModeToggle').classList.toggle('active');
+            localStorage.setItem('goldDarkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Check saved dark mode
+        if (localStorage.getItem('goldDarkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeToggle').classList.add('active');
+        }
+
+        // Auto-save on significant changes
+        let saveTimeout;
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', () => {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    if (document.getElementById('vhoriPrice').value) {
+                        saveCalculation();
+                    }
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

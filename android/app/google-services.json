@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "217935562192",
+    "firebase_url": "https://bbs-platform-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "bbs-platform",
+    "storage_bucket": "bbs-platform.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217935562192:android:d28d905efb64d8552ae5d5",
+        "android_client_info": {
+          "package_name": "com.minlab.goldcalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqjBXKAlaurg5wOAvSGZ7fb4ZoN2SgNIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
