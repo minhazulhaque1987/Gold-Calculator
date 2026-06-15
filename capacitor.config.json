@@ -1,0 +1,11 @@
+{
+  "appId": "com.minlab.goldcalculator",
+  "appName": "Gold Calculator",
+  "webDir": "www",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#2e7d32"
+    }
+  }
+}
